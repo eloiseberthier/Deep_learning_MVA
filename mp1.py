@@ -16,6 +16,26 @@ def generate_a_drawing(figsize, U, V, noise=0.0):
     plt.close(fig)
     return imdata
 
+def generate_dataset_pair(nb_samples, noise=0.0, free_location=False):
+    # Getting im_size:
+    im_size = generate_a_rectangle().shape[0]
+    X = np.zeros([nb_samples,im_size])
+    Y = np.zeros([nb_samples,im_size])
+    print('Creating data:')
+    for i in range(nb_samples):
+        if i % 50 == 0:
+            print(i)
+        category = np.random.randint(3)
+        if category == 0:
+            X[i] = generate_a_rectangle(0., free_location)
+        elif category == 1:
+            X[i] = generate_a_disk(0., free_location)
+        else:
+            [X[i], V] = generate_a_triangle(0., free_location)
+    Y = X + noise * np.random.random((nb_samples,im_size))
+    Y = (Y + noise) / (255 + 2 * noise)
+    return [Y, X]
+
 def generate_a_rectangle(noise=0.0, free_location=False):
     figsize = 1.0    
     U = np.zeros(4)
